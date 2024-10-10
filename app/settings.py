@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-u9z*2tf8d%a_vvjsn_-d+htfu4vda5%%32q-)=a1p53%w9)f5q
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['aster-inventory-audit.azurewebsites.net','localhost']
 
 
 # Application definition
@@ -131,3 +131,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static\\assets')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# This is a security feature that ensures that all requests are served over HTTPS.
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
