@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Aster Inventory</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/png" href="{% static 'assets/images/icons/favicon.ico' %}"/>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/productentry.css' %} "> 
+
+</head>
+<body>
+    <link href="{% static 'assets/css/selectize.bootstrap3.min.css' %}" rel="stylesheet" type="text/css" />
+    <div class="container mt-5">
+        <h1 class="text-center">Download Data</h1>
+        <form id="myForm" method="post">
+            {% csrf_token %}
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <label class="form-control-label" for="fromdate">From Date:</label>
+                    <input type="date" id="fromdate" name="fromdate" class="form-control" required>
+                </div>
+                <div class="form-group col-md-6">
+                    <label class="form-control-label" for="todate">To Date:</label>
+                    <input type="date" id="todate" name="todate" class="form-control" required>
+                </div>
+                </div>
+                <button type="submit" name="downloadrecord" class="btn btn-success btn-block">Download</button>
+        </form>
+    </div>
+</body>
+</html>

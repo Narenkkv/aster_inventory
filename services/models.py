@@ -6,7 +6,7 @@ from datetime import datetime
 class ProductMaster(models.Model):
     item_number = models.CharField(db_column='Item_number', primary_key=True, max_length=10, blank=True, null=False)  # Field name made lowercase.
     product_name = models.CharField(db_column='Product_name', max_length=500)  # Field name made lowercase.
-    search_name = models.CharField(db_column='Search_name', max_length=600, blank=True, null=True)  # Field name made lowercase.
+    search_name = models.CharField(db_column='Search_name', max_length=600, blank=True, null=True,db_index=True)  # Field name made lowercase.
     item_reference = models.CharField(db_column='Item_reference', max_length=400, blank=True, null=True)  # Field name made lowercase.
     manufacturer = models.CharField(db_column='Manufacturer', max_length=300, blank=True, null=True)  # Field name made lowercase.
     unit = models.CharField(db_column='Unit', max_length=30, blank=True, null=True)  # Field name made lowercase.
@@ -25,24 +25,27 @@ class ProductMaster(models.Model):
     
 
 class Usermaster(models.Model):
-    user_code = models.TextField(primary_key=True)
+    user_code = models.TextField(primary_key=True, blank=True, null=False)
     name = models.TextField()
     password = models.TextField()
     date_of_creation = models.DateTimeField(blank=True, null=True)
     created_user = models.TextField(blank=True, null=True)
+    isdownload = models.IntegerField()
 
     class Meta:
         managed = False
         db_table = 'usermaster'
 
 
-class Productdetail(models.Model):
+class ProductDetail(models.Model):
     item_code = models.TextField(blank=True, null=True)  # This field type is a guess.
     item_name = models.CharField(max_length=500, blank=True, null=True)
     batch = models.CharField(max_length=100, blank=True, null=True)
     qty = models.TextField(blank=True, null=True)  # This field type is a guess.
     mrp = models.TextField(blank=True, null=True)  # This field type is a guess.
+    user_name = models.CharField(max_length=50, blank=True, null=True)
+    date_of_created = models.DateTimeField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'productdetail'
+        db_table = 'product_detail'

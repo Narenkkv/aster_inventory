@@ -14,7 +14,6 @@ $(document).ready(function () {
                             for (let i = 0; i < data.length; i++) {
                                 selectize.clear();
                                 $.each(data, function (index, option) {
-                                    console.log(option);
                                     selectize.addOption({ value: option.item_code, text: option.item_name });
                                 });
                                 selectize.load(function (callback) {
@@ -35,6 +34,7 @@ $(document).ready(function () {
                             url: "/productlist/" + str + "/",
                             dataType: "json",
                             success: function (data) {
+                                selectize.clearOptions();
                                 for (let i = 0; i < data.length; i++) {
                                     $.each(data, function (index, option) {
                                         selectize.addOption({ value: option.item_code, text: option.item_name });
