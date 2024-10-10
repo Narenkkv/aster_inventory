@@ -4,7 +4,7 @@ from datetime import datetime
 # Create your models here.
 
 class ProductMaster(models.Model):
-    item_number = models.CharField(db_column='Item_number', primary_key=True, max_length=10, blank=True, null=True)  # Field name made lowercase.
+    item_number = models.CharField(db_column='Item_number', primary_key=True, max_length=10, blank=True, null=False)  # Field name made lowercase.
     product_name = models.CharField(db_column='Product_name', max_length=500)  # Field name made lowercase.
     search_name = models.CharField(db_column='Search_name', max_length=600, blank=True, null=True)  # Field name made lowercase.
     item_reference = models.CharField(db_column='Item_reference', max_length=400, blank=True, null=True)  # Field name made lowercase.
