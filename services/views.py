@@ -11,7 +11,6 @@ import json
 def index(request):
     try:
         if request.method == "POST" and 'login' in request.POST:
-            
             username = request.POST['username'].lower()
             password = request.POST['pass'].lower()
             userNameCheck = Usermaster.objects.filter(name=username).all()
@@ -48,7 +47,7 @@ def productlist(request,search):
             data = ProductMaster.objects.all().order_by('item_number')[:10]
             for i in data:
                 res = {
-                    'item_code':i.item_code,
+                    'item_code':i.item_number,
                     'item_name':i.product_name
                 }
                 result.append(res)
@@ -56,7 +55,7 @@ def productlist(request,search):
             data = ProductMaster.objects.filter(search_name__icontains = search).all()
             for i in data:
                 res = {
-                    'item_code':i.item_code,
+                    'item_code':i.item_number,
                     'item_name':i.product_name
                 }
                 result.append(res)

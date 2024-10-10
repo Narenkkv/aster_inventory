@@ -134,5 +134,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static\\assets')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # This is a security feature that ensures that all requests are served over HTTPS.
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
