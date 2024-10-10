@@ -5,13 +5,13 @@ from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 import pandas as pd
 import json
-
 # Create your views here.
 
 
 def index(request):
     try:
         if request.method == "POST" and 'login' in request.POST:
+            
             username = request.POST['username'].lower()
             password = request.POST['pass'].lower()
             userNameCheck = Usermaster.objects.filter(name=username).all()

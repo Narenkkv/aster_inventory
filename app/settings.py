@@ -21,12 +21,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '-'
+SECRET_KEY = '0*90ch@tra4ws!s%^8(7m9vj8u0z_o#c7@m3t#pmo6($=a&w(_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['aster-inventory-audit.azurewebsites.net','localhost']
+ALLOWED_HOSTS = ['aster-inventory-audit.azurewebsites.net','localhost','.vercel.app']
 
 
 # Application definition
@@ -133,5 +133,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static\\assets')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # This is a security feature that ensures that all requests are served over HTTPS.
-SECURE_SSL_REDIRECT = True
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# SECURE_SSL_REDIRECT = True
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
