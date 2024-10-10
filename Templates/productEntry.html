@@ -5,13 +5,13 @@
 	<title>Aster Inventory</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" href="/static/assets/images/icons/favicon.ico"/>
+    <link rel="icon"  href="{% static 'assets/images/icons/favicon.ico' %}"/>
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="/static/assets/css/productentry.css">
+    <link rel="stylesheet" href="{% static 'assets/css/productentry.css' %} "> 
 
 </head>
 <body>
-    <link href="/static/assets/css/selectize.bootstrap3.min.css" rel="stylesheet" type="text/css" />
+    <link href="{% static 'assets/css/selectize.bootstrap3.min.css' %}" rel="stylesheet"  />
     <div class="container mt-5">
         <h1 class="text-center">Product Entry Form</h1>
         <form id="myForm" method="post">
@@ -40,9 +40,9 @@
                 <button type="submit" name="recordsave" class="btn btn-success btn-block">Save</button>
         </form>
     </div>
-    <script type="text/javascript" src="/static/assets/js/cdn/jquery.min.js"></script>
-    <script type="text/javascript" src="/static/assets/js/cdn/selectize.min.js"></script>
-    <script type="text/javascript" src="/static/assets/js/common.js"></script>
+    <script  src="{% static 'assets/js/cdn/jquery.min.js' %}"></script>
+    <script  src="{% static 'assets/js/cdn/selectize.min.js' %}"></script>
+    <script  src="{% static 'assets/js/common.js' %}"></script>
     <script>
         $(function() {
             $('.delValueFetch').selectize({
