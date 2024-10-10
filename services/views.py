@@ -56,7 +56,8 @@ def productentry(request):
                 mrp = mrp,
                 user_name = request.session['username'],
                 date_of_created = datetime.now()
-            )    
+            )
+            return redirect('productentry')     
         return render(request, 'productEntry.html')
     except Exception as e:
         print(e)
