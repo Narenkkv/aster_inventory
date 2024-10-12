@@ -28,11 +28,11 @@ def index(request):
                     return redirect('index')
                 else:
                     request.session['username'] = username
-                    # username =  Usermaster.objects.filter(name=username).get()
-                    # if username.isdownload == 1:
-                    #     return redirect('download_data')
-                    # else:
-                    return redirect('productentry')
+                    username =  Usermaster.objects.filter(name=username).get()
+                    if username.isdownload == 1:
+                        return redirect('download_data')
+                    else:
+                        return redirect('productentry')
         return render(request, 'login/index.html')
     except Exception as e:
         print(e)
@@ -90,26 +90,26 @@ def productlist(request,search):
         return HttpResponse(json.dumps({'errorMsg': str(e)}), 500)
    
 
-# def download_data(request):
-#     try:
-#         if request.method == "POST" and 'downloadrecord' in request.POST:
-#             fromDate = request.POST['fromdate']
-#             toDate = request.POST['todate']
-#             conn = sqlite3.connect('db.sqlite3')
-#             query = """
-#                 SELECT * FROM product_detail
-#                 WHERE date(date_of_created) BETWEEN ? AND ?
-#                 """
-#             filename = f'Audit_Data_{fromDate}'
-#             data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
-#             output = io.BytesIO()
-#             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
-#                 data.to_excel(writer, sheet_name='Audit_Data', index=False)
-#             output.seek(0)
-#             response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-#             response['Content-Disposition'] = f'attachment; filename={smart_str("Audit_Data_" + fromDate + ".xlsx")}'
-#             return response
-#         return render(request, 'download_data.html')
-#     except Exception as e:
-#         print(e)
-#         return render(request, 'login/index.html')
+def download_data(request):
+    try:
+        if request.method == "POST" and 'downloadrecord' in request.POST:
+            fromDate = request.POST['fromdate']
+            toDate = request.POST['todate']
+            conn = sqlite3.connect('db.sqlite3')
+            query = """
+                SELECT * FROM product_detail
+                WHERE date(date_of_created) BETWEEN ? AND ?
+                """
+            filename = f'Audit_Data_{fromDate}'
+            data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                data.to_excel(writer, sheet_name='Audit_Data', index=False)
+            output.seek(0)
+            response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename={smart_str("Audit_Data_" + fromDate + ".xlsx")}'
+            return response
+        return render(request, 'download_data.html')
+    except Exception as e:
+        print(e)
+        return render(request, 'login/index.html')
