@@ -4,6 +4,7 @@ from datetime import datetime
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 from django.utils.encoding import smart_str
+from django.db.models import Q
 import pandas as pd
 import os
 import sqlite3
@@ -17,6 +18,12 @@ def index(request):
         if request.method == "POST" and 'login' in request.POST:
             username = request.POST['username'].lower()
             password = request.POST['pass'].lower()
+            storeid = request.POST.get('store_name')
+            rackNo = request.POST['rackno']
+            print(storeid)
+            if storeid:
+                request.session['storeid'] = storeid
+            request.session['rackNo'] = rackNo
             userNameCheck = Usermaster.objects.filter(name=username).all()
             if not userNameCheck:
                 messages.error(request,'Invalid User Name !...')
@@ -40,24 +47,28 @@ def index(request):
 
 def productentry(request):
     try:
-        print(request.session['username'])
-        if request.method == "POST" and 'recordsave' in request.POST:
-            productcode = request.POST['item_name']
-            productname = ProductMaster.objects.filter(item_number = productcode).get()
-            batch = request.POST['batch'].upper()
-            qty = request.POST['qty']
-            mrp = request.POST['mrp']
-            print('test')
-            ProductDetail.objects.create(
-                item_code = productcode,
-                item_name = productname.product_name,
-                batch = batch,
-                qty = qty,
-                mrp = mrp,
-                user_name = request.session['username'],
-                date_of_created = datetime.now()
-            )
-            return redirect('productentry')     
+        if request.method == "POST": 
+            if 'recordsave' in request.POST:
+                productcode = request.POST['item_name']
+                productname = ProductMaster.objects.filter(item_number = productcode).get()
+                batch = request.POST['batch'].upper()
+                qty = request.POST['qty']
+                mrp = request.POST['mrp']
+                expMonth = request.POST['expMonth']
+                expYear = request.POST['expYear']
+                ProductDetail.objects.create(
+                    store_id = request.session['storeid'],
+                    item_code = productcode,
+                    item_name = productname.product_name,
+                    batch = batch,
+                    qty = qty,
+                    mrp = mrp,
+                    user_name = request.session['username'],
+                    date_of_created = datetime.now(),
+                    rack_no = request.session['rackNo'],
+                    exp_date = expMonth+'-'+expYear
+                )
+                return redirect('productentry')
         return render(request, 'productEntry.html')
     except Exception as e:
         print(e)
@@ -76,7 +87,6 @@ def productlist(request,search):
                 }
                 result.append(res)
         else:
-
             data = ProductMaster.objects.filter(search_name__icontains = search).all().order_by('item_number')[:50]
             for i in data:
                 res = {
@@ -113,3 +123,38 @@ def download_data(request):
     except Exception as e:
         print(e)
         return render(request, 'login/index.html')
+    
+def storelist(request,search):
+    try:
+        result = []
+        if search == "-":
+            data = StoreMaster.objects.all().order_by('store_code')[:50]
+            for i in data:
+                res={
+                    'store_code':i.store_code,
+                    'store_name':i.store_code+'_'+i.short_name
+                }
+                result.append(res)
+        else:   
+            data = StoreMaster.objects.filter(Q(short_name__icontains=search) | Q(store_code__icontains=search)).all().order_by('store_code')[:50]
+            for i in data:
+                res = {
+                    'store_code':i.store_code,
+                    'store_name':i.store_code+'_'+i.short_name
+                }
+                result.append(res)
+        return JsonResponse(result,safe = False)
+    except Exception as e:  
+        print(e)
+        return HttpResponse(json.dumps({'errorMsg': str(e)}), 500)  
+    
+def logout(request):
+    try:
+        if 'username' in request.session:
+            del request.session['username']
+            # del request.session['storeid']
+            # del request.session['rackNo']
+        return redirect('index')
+    except Exception as e:
+        print(e)
+        return redirect('index')

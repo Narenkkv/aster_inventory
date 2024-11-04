@@ -3,3 +3,5 @@ pandas
 openpyxl
 whitenoise==6.2.0
 XlsxWriter==3.0.3
+python-dotenv==1.0.1
+mssql-django==1.5

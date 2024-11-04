@@ -25,27 +25,42 @@ class ProductMaster(models.Model):
     
 
 class Usermaster(models.Model):
-    user_code = models.TextField(primary_key=True, blank=True, null=False)
-    name = models.TextField()
-    password = models.TextField()
+    user_code = models.CharField(primary_key=True, max_length=50)
+    name = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
     date_of_creation = models.DateTimeField(blank=True, null=True)
-    created_user = models.TextField(blank=True, null=True)
+    created_user = models.CharField(max_length=50, blank=True, null=True)
     isdownload = models.IntegerField()
 
     class Meta:
         managed = False
-        db_table = 'usermaster'
+        db_table = 'user_master'
 
 
 class ProductDetail(models.Model):
-    item_code = models.TextField(blank=True, null=True)  # This field type is a guess.
+    store_id = models.CharField(max_length=50)
+    item_code = models.CharField(max_length=10, blank=True, null=True)
     item_name = models.CharField(max_length=500, blank=True, null=True)
     batch = models.CharField(max_length=100, blank=True, null=True)
-    qty = models.TextField(blank=True, null=True)  # This field type is a guess.
-    mrp = models.TextField(blank=True, null=True)  # This field type is a guess.
+    qty = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    mrp = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
     user_name = models.CharField(max_length=50, blank=True, null=True)
     date_of_created = models.DateTimeField(blank=True, null=True)
-
+    rack_no = models.CharField(max_length=100, blank=True, null=True)
+    exp_date = models.CharField(max_length=8, blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'product_detail'
+
+class StoreMaster(models.Model):
+    store_code = models.CharField(db_column='Store_Code', primary_key=True, max_length=50)  # Field name made lowercase.
+    email_id = models.CharField(db_column='Email_ID', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    short_name = models.CharField(db_column='Short_Name', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    zip_code = models.CharField(db_column='Zip_Code', max_length=7, blank=True, null=True)  # Field name made lowercase.
+    region = models.CharField(db_column='Region', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    d_365_store_id = models.CharField(db_column='D_365_Store_Id', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    store_name_as_per_d_365 = models.CharField(db_column='Store_Name_As_per_D_365', max_length=100, blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'Store_master'

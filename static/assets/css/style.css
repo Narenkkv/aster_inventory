@@ -1,0 +1,58 @@
+/* Sidebar styles */
+.sidebar {
+    width: 170px; /* Fixed width for sidebar */
+    height: 100vh; /* Full height of viewport */
+    position: fixed; /* Fix it to the side */
+    top: 56px; /* Offset for the navbar height */
+    left: 0; /* Always show sidebar */
+    background-color: #343a40; /* Sidebar color */
+    padding-top: 1rem;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.5);
+    z-index: 1000; /* Ensure sidebar is above other elements */
+}
+
+.sidebar a {
+    padding: 10px 15px; /* Padding for links */
+    text-decoration: none; /* Remove underline */
+    color: #ffffff; /* Text color */
+    display: flex; /* Flex layout to align items */
+    align-items: center; /* Center icons vertically */
+    transition: background-color 0.2s; /* Smooth hover effect */
+}
+
+.sidebar a:hover {
+    background-color: #495057; /* Background color on hover */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 50px; /* Narrow sidebar for mobile */
+    }
+
+    .sidebar a {
+        justify-content: center; /* Center icons in the narrow sidebar */
+        padding: 10px 0; /* Vertical padding only */
+    }
+
+    /* Hide the text labels completely in mobile and tablet view */
+    .sidebar a span {
+        display: none; /* Hide text labels */
+    }
+
+    .sidebar a i {
+        font-size: 1.5rem; /* Increase icon size for visibility */
+    }
+
+    .main-content {
+        margin-left: 50px; /* Adjust margin for the narrow sidebar */
+        padding: 10px; /* Adjust padding for mobile */
+    }
+}
+
+/* For larger screens (tablet and up) */
+@media (min-width: 769px) {
+    .sidebar a span {
+        display: inline; /* Show text labels */
+    }
+}
