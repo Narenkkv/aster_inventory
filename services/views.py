@@ -6,6 +6,7 @@ from django.http import HttpResponse, JsonResponse
 from django.utils.encoding import smart_str
 from django.db.models import Q
 import pandas as pd
+import pyodbc
 import os
 import sqlite3
 import json
@@ -105,10 +106,15 @@ def download_data(request):
         if request.method == "POST" and 'downloadrecord' in request.POST:
             fromDate = request.POST['fromdate']
             toDate = request.POST['todate']
-            conn = sqlite3.connect('db.sqlite3')
+            connection_string = ('DRIVER={ODBC Driver 17 for SQL Server};'
+                            f"SERVER={os.environ["HOST"]};"
+                            f"DATABASE={os.environ["DB_NAME"]};"
+                            f"UID={os.environ["DB_USER"]};"
+                            f"PWD={os.environ["DB_PASSWORD"]};")
+            conn = pyodbc.connect(connection_string)
             query = """
                 SELECT * FROM product_detail
-                WHERE date(date_of_created) BETWEEN ? AND ?
+                WHERE CAST(date_of_created AS DATE) BETWEEN ? AND ?
                 """
             filename = f'Audit_Data_{fromDate}'
             data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
@@ -118,6 +124,7 @@ def download_data(request):
             output.seek(0)
             response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
             response['Content-Disposition'] = f'attachment; filename={smart_str("Audit_Data_" + fromDate + ".xlsx")}'
+            conn.close()
             return response
         return render(request, 'download_data.html')
     except Exception as e:
@@ -152,8 +159,9 @@ def logout(request):
     try:
         if 'username' in request.session:
             del request.session['username']
-            # del request.session['storeid']
-            # del request.session['rackNo']
+            del request.session['rackNo']
+        if 'storeid' in request.session:
+            del request.session['storeid']
         return redirect('index')
     except Exception as e:
         print(e)

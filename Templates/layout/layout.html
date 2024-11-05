@@ -38,9 +38,7 @@
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
     <a href="#"><i class="fas fa-user"></i> <span> {{name}} </span></a>
-    {% if isdownload ==  1 %}
-    <a href="{% url 'download_data' %}"><i class="fa fa-download"></i> <span>Download</span></a>
-    {% endif %}
+    
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
 </div>
 
