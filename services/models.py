@@ -64,3 +64,18 @@ class StoreMaster(models.Model):
     class Meta:
         managed = False
         db_table = 'Store_master'
+
+class ProductBarcodeMaster(models.Model):
+    itemnumber = models.CharField(db_column='ITEMNUMBER', max_length=10)  # Field name made lowercase.
+    productquantityunitsymbol = models.CharField(db_column='PRODUCTQUANTITYUNITSYMBOL', max_length=10,  blank=True, null=True)  # Field name made lowercase.
+    barcodesetupid = models.CharField(db_column='BARCODESETUPID', max_length=10,  blank=True, null=True)  # Field name made lowercase.
+    barcode = models.CharField(db_column='BARCODE', max_length=100,  blank=True, null=True)  # Field name made lowercase.
+    isdefaultdisplayedbarcode = models.CharField(db_column='ISDEFAULTDISPLAYEDBARCODE', max_length=10,  blank=True, null=True)  # Field name made lowercase.
+    isdefaultprintedbarcode = models.CharField(db_column='ISDEFAULTPRINTEDBARCODE', max_length=10,  blank=True, null=True)  # Field name made lowercase.
+    isdefaultscannedbarcode = models.CharField(db_column='ISDEFAULTSCANNEDBARCODE', max_length=50,  blank=True, null=True)  # Field name made lowercase.
+    productdescription = models.CharField(db_column='PRODUCTDESCRIPTION', max_length=500,  blank=True, null=True)  # Field name made lowercase.
+    productquantity = models.CharField(db_column='PRODUCTQUANTITY', max_length=10,  blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'product_barcode_master'

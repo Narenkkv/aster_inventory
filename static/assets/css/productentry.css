@@ -51,3 +51,17 @@ h1 {
         font-size: 1.5rem; /* Adjust heading size */
     }
 }
+#reader {
+    width: 100%;
+    height: auto;
+    max-width: 400px; /* Optional, adjust as needed */
+    margin: 0 auto;
+    display: none;
+}
+
+@media (max-width: 767px) {
+    #reader {
+        max-width: 80%;  /* Limit width to 80% of the screen */
+        height: 250px;   /* Set a fixed height */
+    }
+}

@@ -166,3 +166,23 @@ def logout(request):
     except Exception as e:
         print(e)
         return redirect('index')
+    
+def scanbarcode(request):
+    if request.method == "POST":
+        try:
+            barCode = request.POST.get('barcode')
+            print(barCode)
+            product = ProductBarcodeMaster.objects.filter(barcode=barCode).first()
+            print(product)
+            if product:
+                print({'ids': product.itemnumber, 'name': product.productdescription})
+                return JsonResponse({
+                    'success': True,
+                    'product': {'ids': product.itemnumber, 'name': product.productdescription}
+                })
+            else:
+                return JsonResponse({'success': False, 'error': 'Product not found.'})
+        except Exception as e:
+            print(e)
+            return JsonResponse({'success': False, 'error': str(e)})
+    return JsonResponse({'success': False, 'error': 'Invalid request method.'})

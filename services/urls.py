@@ -10,4 +10,5 @@ urlpatterns = [
     path('downloaddata/',views.download_data,name='download_data'),
     path('storelist/<search>/',views.storelist,name='storelist'),
     path('logout',views.logout,name='logout'),
+    path('scanbarcode/',views.scanbarcode,name='scanbarcode'),
 ]

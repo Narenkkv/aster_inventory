@@ -8,10 +8,13 @@
             {% csrf_token %}
             <h1 class="text-center">Product Entry Form</h1>
             <div class="form-row">
-                <div class="form-group col-md-6">
+                <div class="form-group col-md-4">
                     <label class="form-control-label" for="delValueFetch">Product Name:</label>
                     <select id="delValueFetch" data-search="true" data-value="Custom" class="fw-light delValueFetch" name="item_name">
                     </select>
+                </div>
+                <div class="form-group col-md-2">
+                    <button type="button" id="start-scanner" class="btn btn-primary btn-block">Scan Barcode</button>											  
                 </div>
                 <div class="form-group col-md-6">
                     <label class="form-control-label" for="batch">Batch:</label>
@@ -48,10 +51,16 @@
             </div>
             <button type="submit" name="recordsave" class="btn btn-success btn-block">Save</button>
         </form>
+        <!-- Video Element for Scanning -->
+        <video id="reader" style="width: 100%; display: none;"></video>
     </div>
     <script type="text/javascript" src="{% static 'assets/js/cdn/jquery.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/cdn/selectize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/common.js' %}"></script>
+    <!-- ZXing.js should be loaded before your custom barcode scanning script -->
+    <script src="https://unpkg.com/@zxing/library@latest"></script>
+    <script type="text/javascript" src="{% static 'assets/js/barcodescan.js' %}"></script>
+
     <script>
         $(function() {
             $('.delValueFetch').selectize({
