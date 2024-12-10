@@ -22,8 +22,8 @@ $(function () {
                     if ($selectizeControl) {
                         // Clear existing options and add the new one
                         $selectizeControl.clearOptions();
-                        $selectizeControl.addOption({ value: response.product['id'], text: response.product['name'] });
-                        $selectizeControl.setValue(response.product['id']);
+                        $selectizeControl.addOption({ value: response.product['ids'], text: response.product['name'] });
+                        $selectizeControl.setValue(response.product['ids']);
                     } else {
                         console.error('Selectize control not found.');
                     }
