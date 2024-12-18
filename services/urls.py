@@ -11,4 +11,6 @@ urlpatterns = [
     path('storelist/<search>/',views.storelist,name='storelist'),
     path('logout',views.logout,name='logout'),
     path('scanbarcode/',views.scanbarcode,name='scanbarcode'),
+    path('storeexpiryreportdownload/',views.store_expiry_report_download_data,name='store_expiry_report_download_data'),
+    path('storeexpiryproductentry/',views.store_expiry_data_entry,name='store_expiry_data_entry'),
 ]

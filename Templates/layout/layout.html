@@ -37,9 +37,12 @@
 
 <!-- Sidebar -->
 <div class="sidebar" id="sidebar">
-    <a href="#"><i class="fas fa-user"></i> <span> {{name}} </span></a>
-    
-    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></a>
+    <a href="#"><i class="fas fa-user"></i> <span style="margin-left: 5px;"> {{name}} </span></a>
+    {% if isdownload == 2 %}
+    <a href="{% url 'store_expiry_data_entry' %}"><i class="fa-solid fa-table-cells-large"></i><span style="margin-left: 5px;"> Data Entry Form </span></a>
+    <a href="{% url 'store_expiry_report_download_data' %}"><i class="fa-solid fa-download"></i><span style="margin-left: 5px;"> RTV Data </span></a>
+    {% endif %}
+    <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span style="margin-left: 5px;"> Logout </span></a>
 </div>
 
 <!-- Main Content -->

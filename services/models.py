@@ -60,6 +60,8 @@ class StoreMaster(models.Model):
     region = models.CharField(db_column='Region', max_length=100, blank=True, null=True)  # Field name made lowercase.
     d_365_store_id = models.CharField(db_column='D_365_Store_Id', max_length=100, blank=True, null=True)  # Field name made lowercase.
     store_name_as_per_d_365 = models.CharField(db_column='Store_Name_As_per_D_365', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    store_state = models.CharField(max_length=200, blank=True, null=True)
+    active = models.IntegerField()
 
     class Meta:
         managed = False
@@ -79,3 +81,58 @@ class ProductBarcodeMaster(models.Model):
     class Meta:
         managed = False
         db_table = 'product_barcode_master'
+
+class EnteroItemLists(models.Model):
+    entity_name = models.CharField(db_column='Entity_Name', max_length=100, blank=True, null=True)  # Field name made lowercase.
+    sku_code = models.CharField(db_column='SKU_Code', max_length=11, blank=True, null=True)  # Field name made lowercase.
+    sku_name = models.CharField(db_column='SKU_Name', max_length=500, blank=True, null=True)  # Field name made lowercase.
+    batch_expiry_date = models.DateField(blank=True, null=True)
+    batch_no = models.CharField(db_column='Batch_No', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    qty_sold = models.FloatField(db_column='Qty_Sold', blank=True, null=True)  # Field name made lowercase.
+    pts = models.DecimalField(db_column='PTS', max_digits=18, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    mrp = models.DecimalField(db_column='MRP', max_digits=18, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    vl_mrp = models.DecimalField(db_column='Vl_Mrp', max_digits=18, decimal_places=2, blank=True, null=True)  # Field name made lowercase.
+    mdm = models.CharField(db_column='MDM', max_length=500, blank=True, null=True)  # Field name made lowercase.
+    state = models.CharField(max_length=100, blank=True, null=True)
+    karnataka = models.IntegerField(blank=True, null=True)
+    kerala = models.IntegerField(blank=True, null=True)
+    telangana = models.IntegerField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'entero_item_lists'
+
+
+class SupplierReturnItem(models.Model):
+    store_id = models.CharField(max_length=50)
+    item_code = models.CharField(max_length=10)
+    item_name = models.CharField(max_length=500)
+    batch_no = models.CharField(max_length=100)
+    date_of_expiry = models.DateField()
+    vendor_name = models.CharField(max_length=500)
+    accepted_qty = models.DecimalField(max_digits=10, decimal_places=0)
+    created_by = models.CharField(max_length=200)
+    date_of_creation = models.DateTimeField()
+    return_qty = models.DecimalField(max_digits=10, decimal_places=0)
+    remaining_qty = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    productdetail_id = models.IntegerField()
+
+    class Meta:
+        managed = False
+        db_table = 'supplier_return_item'
+
+class StoreExpiryProductDetail(models.Model):
+    store_id = models.CharField(max_length=50)
+    item_code = models.CharField(max_length=10, blank=True, null=True)
+    item_name = models.CharField(max_length=500, blank=True, null=True)
+    batch = models.CharField(max_length=100, blank=True, null=True)
+    qty = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
+    mrp = models.DecimalField(max_digits=16, decimal_places=2, blank=True, null=True)
+    user_name = models.CharField(max_length=50, blank=True, null=True)
+    date_of_created = models.DateTimeField(blank=True, null=True)
+    rack_no = models.CharField(max_length=100, blank=True, null=True)
+    exp_date = models.CharField(max_length=8, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'store_expiry_product_detail'
