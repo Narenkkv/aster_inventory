@@ -280,6 +280,24 @@ def store_expiry_data_entry(request):
                         if selected_vendor != 'Others':
                             itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
                                                         batch_no_upper = batch, state = state.store_state, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
+                    else:
+                        date_string = expMonth+'-'+expYear
+                        date_object = datetime.strptime(date_string, "%m-%Y")
+                        formatted_date = date_object.strftime("%Y-%m-%d")
+                        SupplierReturnItem.objects.create(
+                            store_id = request.session['storeid'],
+                            item_code = productcode,
+                            item_name = productname.product_name,
+                            batch_no = batch,
+                            date_of_expiry = formatted_date,
+                            vendor_name = 'Others',
+                            accepted_qty = qty,
+                            created_by = request.session['username'],
+                            date_of_creation = datetime.now(),
+                            return_qty = qty,
+                            remaining_qty = 0,
+                            productdetail_id = getproductdetailsid
+                        )
                 return redirect('store_expiry_data_entry')
         return render(request, 'store_expiry_product_entry.html')
     except Exception as e:
