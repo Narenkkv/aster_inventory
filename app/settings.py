@@ -86,10 +86,10 @@ WSGI_APPLICATION = 'app.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME':  "darktechie",
-        'USER': "astersql",
-        'PASSWORD': "ItAster@1234",
-        'HOST': "4.186.61.56",
+        'NAME':  os.environ["DB_NAME"],
+        'USER': os.environ["DB_USER"],
+        'PASSWORD': os.environ["DB_PASSWORD"],
+        'HOST': os.environ["HOST"],
         'PORT': '1433',
 
         'OPTIONS': {
@@ -147,5 +147,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static\\assets')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # This is a security feature that ensures that all requests are served over HTTPS.
-# SECURE_SSL_REDIRECT = True
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SECURE_SSL_REDIRECT = True
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
