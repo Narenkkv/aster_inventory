@@ -55,7 +55,7 @@ def productentry(request):
             if 'recordsave' in request.POST:
                 with transaction.atomic():
                     productcode = request.POST['item_name']
-                    productname = ProductMaster.objects.filter(item_number = productcode).get()
+                    productname = ItemMaster.objects.filter(aster_code = productcode).get()
                     batch = request.POST['batch'].upper()
                     qty = request.POST['qty']
                     mrp = request.POST['mrp']
@@ -87,18 +87,18 @@ def productlist(request,search):
    try:
         result = []
         if search == '-':
-            data = ProductMaster.objects.all().order_by('item_number')[:50]
+            data = ItemMaster.objects.all().order_by('aster_code')[:50]
             for i in data:
                 res = {
-                    'item_code':i.item_number,
+                    'item_code':i.aster_code,
                     'item_name':i.product_name
                 }
                 result.append(res)
         else:
-            data = ProductMaster.objects.filter(search_name__icontains = search).all().order_by('item_number')[:50]
+            data = ItemMaster.objects.filter(product_name__icontains = search).all().order_by('aster_code')[:50]
             for i in data:
                 res = {
-                    'item_code':i.item_number,
+                    'item_code':i.aster_code,
                     'item_name':i.product_name
                 }
                 result.append(res)
@@ -309,8 +309,8 @@ def store_expiry_data_entry(request):
     
 def getpacksize(request,productcode):
     try:
-        getdetails = ProductMaster.objects.filter(item_number = productcode).get()
-        packsize = getdetails.pack_size
+        getdetails = ItemMaster.objects.filter(aster_code = productcode).get()
+        packsize = getdetails.sales_unit
         actualpacksize = ''
         if packsize is None:
             actualpacksize = 'Null'

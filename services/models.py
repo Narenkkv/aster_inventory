@@ -138,3 +138,15 @@ class StoreExpiryProductDetail(models.Model):
     class Meta:
         managed = False
         db_table = 'store_expiry_product_detail'
+
+class ItemMaster(models.Model):
+    aster_code = models.CharField(db_column='Aster_Code', primary_key=True, max_length=50)  # Field name made lowercase.
+    product_form = models.CharField(db_column='Product_Form', max_length=50)  # Field name made lowercase.
+    product_name = models.CharField(db_column='Product_name', max_length=600)  # Field name made lowercase.
+    ean_upc = models.CharField(db_column='EAN_UPC', max_length=50, blank=True, null=True)  # Field name made lowercase.
+    product_type = models.CharField(db_column='Product_type', max_length=50)  # Field name made lowercase.
+    sales_unit = models.CharField(db_column='Sales_Unit', max_length=10)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'item_master'
