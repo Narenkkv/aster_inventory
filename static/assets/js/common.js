@@ -13,7 +13,7 @@ $(document).ready(function () {
                             for (let i = 0; i < data.length; i++) {
                                 selectize.clear();
                                 $.each(data, function (index, option) {
-                                    selectize.addOption({ value: option.item_code, text: option.item_name });
+                                    selectize.addOption({ value: option.item_name, text: option.item_name });
                                 });
                                 selectize.load(function (callback) {
                                     callback(data);
@@ -36,7 +36,7 @@ $(document).ready(function () {
                                 selectize.clearOptions();
                                 for (let i = 0; i < data.length; i++) {
                                     $.each(data, function (index, option) {
-                                        selectize.addOption({ value: option.item_code, text: option.item_name });
+                                        selectize.addOption({ value: option.item_name, text: option.item_name });
                                     });
                                     selectize.load(function (callback) {
                                         callback(data);
@@ -95,22 +95,22 @@ $(document).ready(function () {
             }
         }
     });
-    $('#batch').on("click",function(){
-        var item_code = $("#delValueFetch").val()
-        $("#packsize").val('');
+    $(document).on("change", ".delValueFetch", function () {
+        var selectize = $(this).selectize()[0].selectize;
+        var selectedValues = selectize.getValue();
+        var value = [];
         try{
             $.ajax({
                 type: "GET",
-                url: "/getpacksize/" + item_code + "/",
+                url: "/getpacksize/" + selectedValues + "/",
                 dataType: "json",
                 success: function (data) {
-                    packsize = data.product['packSize'];
-                    if (packsize == 'Null'){
-                        $("#packsize").prop('readonly',false);
-                    }else{
-                        $("#packsize").prop('readonly',true);
-                        $("#packsize").val(packsize);
-                    }
+                    data.product.packSize.forEach(function (size) {
+                        value += '<option value="' + size + '">' + size + "</option>";
+                    });
+                    console.log(value);
+                    $("#packsize").empty();
+                    $("#packsize").append(value);
                 }
             })
         }catch(i){

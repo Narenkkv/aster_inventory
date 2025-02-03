@@ -146,7 +146,15 @@ class ItemMaster(models.Model):
     ean_upc = models.CharField(db_column='EAN_UPC', max_length=50, blank=True, null=True)  # Field name made lowercase.
     product_type = models.CharField(db_column='Product_type', max_length=50)  # Field name made lowercase.
     sales_unit = models.CharField(db_column='Sales_Unit', max_length=10)  # Field name made lowercase.
+    unique_key = models.CharField(max_length=700, blank=True, null=True)
 
     class Meta:
         managed = False
         db_table = 'item_master'
+
+class ProductNameList(models.Model):
+    product_name = models.CharField(max_length=600)
+
+    class Meta:
+        managed = False
+        db_table = 'product_name_list'
