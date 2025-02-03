@@ -61,6 +61,8 @@ def productentry(request):
                     mrp = request.POST['mrp']
                     expMonth = request.POST['expMonth']
                     expYear = request.POST['expYear']
+                    packsize = request.POST['packsize']
+
                     ProductDetail.objects.create(
                         store_id = request.session['storeid'],
                         item_code = productcode,
@@ -71,7 +73,8 @@ def productentry(request):
                         user_name = request.session['username'],
                         date_of_created = datetime.now(),
                         rack_no = request.session['rackNo'],
-                        exp_date = expMonth+'-'+expYear
+                        exp_date = expMonth+'-'+expYear,
+                        pack_size = packsize
                     )
                 return redirect('productentry')
         return render(request, 'productEntry.html')
@@ -303,3 +306,17 @@ def store_expiry_data_entry(request):
     except Exception as e:
         print(e)
         return render(request, 'login/index.html')
+    
+def getpacksize(request,productcode):
+    try:
+        getdetails = ProductMaster.objects.filter(item_number = productcode).get()
+        packsize = getdetails.pack_size
+        actualpacksize = ''
+        if packsize is None:
+            actualpacksize = 'Null'
+        else:
+            actualpacksize = str(packsize)
+        return JsonResponse({'success': True,'product': {'packSize': actualpacksize}})
+    except Exception as e:
+        print(e)
+        return JsonResponse({'success': False, 'error': str(e)})

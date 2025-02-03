@@ -18,6 +18,7 @@ class ProductMaster(models.Model):
     ka_mdm = models.CharField(db_column='KA_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
     kl_mdm = models.CharField(db_column='KL_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
     tl_mdm = models.CharField(db_column='TL_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
+    pack_size = models.CharField(max_length=10, blank=True, null=True)
 
     class Meta:
         managed = False
@@ -48,6 +49,7 @@ class ProductDetail(models.Model):
     date_of_created = models.DateTimeField(blank=True, null=True)
     rack_no = models.CharField(max_length=100, blank=True, null=True)
     exp_date = models.CharField(max_length=8, blank=True, null=True)
+    pack_size = models.CharField(max_length=10, blank=True, null=True)
     class Meta:
         managed = False
         db_table = 'product_detail'

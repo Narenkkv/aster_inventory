@@ -95,6 +95,28 @@ $(document).ready(function () {
             }
         }
     });
+    $('#batch').on("click",function(){
+        var item_code = $("#delValueFetch").val()
+        $("#packsize").val('');
+        try{
+            $.ajax({
+                type: "GET",
+                url: "/getpacksize/" + item_code + "/",
+                dataType: "json",
+                success: function (data) {
+                    packsize = data.product['packSize'];
+                    if (packsize == 'Null'){
+                        $("#packsize").prop('readonly',false);
+                    }else{
+                        $("#packsize").prop('readonly',true);
+                        $("#packsize").val(packsize);
+                    }
+                }
+            })
+        }catch(i){
+            console.log(i);
+        }
+    });
     // for dow user need to hide the store details
     $('#storeValueFetch').selectize({
         create: true,
