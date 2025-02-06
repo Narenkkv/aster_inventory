@@ -13,6 +13,6 @@ urlpatterns = [
     path('scanbarcode/',views.scanbarcode,name='scanbarcode'),
     path('storeexpiryreportdownload/',views.store_expiry_report_download_data,name='store_expiry_report_download_data'),
     path('storeexpiryproductentry/',views.store_expiry_data_entry,name='store_expiry_data_entry'),
-    path('getpacksize/<productname>/',views.getpacksize,name='getpacksize'),
+    path('getpacksize/',views.getpacksize,name='getpacksize'),
      path('storeproductlist/<search>/',views.storeproductlist,name='storeproductlist'),
 ]

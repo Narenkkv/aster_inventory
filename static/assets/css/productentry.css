@@ -50,6 +50,12 @@ h1 {
     h1 {
         font-size: 1.5rem; /* Adjust heading size */
     }
+    #manualCheck {
+        margin-left: 135px; /* Adjust spacing */
+        margin-top: -26px; /* Align with the label */
+        position: relative;
+        vertical-align: middle;
+    }
 }
 #reader {
     width: 100%;
@@ -64,4 +70,9 @@ h1 {
         max-width: 80%;  /* Limit width to 80% of the screen */
         height: 250px;   /* Set a fixed height */
     }
+}
+.custom-checkbox{
+    margin-left: 70px;
+    margin-top: 30px;
+    border: 2px solid #007bff !important; /* Change the border color */
 }

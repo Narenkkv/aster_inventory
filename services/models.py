@@ -147,6 +147,7 @@ class ItemMaster(models.Model):
     product_type = models.CharField(db_column='Product_type', max_length=50)  # Field name made lowercase.
     sales_unit = models.CharField(db_column='Sales_Unit', max_length=10)  # Field name made lowercase.
     unique_key = models.CharField(max_length=700, blank=True, null=True)
+    display_name = models.CharField(max_length=900, blank=True, null=True)
 
     class Meta:
         managed = False

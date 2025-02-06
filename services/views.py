@@ -54,19 +54,18 @@ def productentry(request):
         if request.method == "POST": 
             if 'recordsave' in request.POST:
                 with transaction.atomic():
-                    product_name = request.POST['item_name']
+                    product_code = request.POST['item_name']
                     packsize = request.POST['packsize']
                     batch = request.POST['batch'].upper()
                     qty = request.POST['qty']
                     mrp = request.POST['mrp']
                     expMonth = request.POST['expMonth']
                     expYear = request.POST['expYear']
-                    getKey = product_name+packsize
-                    getName = ItemMaster.objects.filter(unique_key = getKey).get()
+                    prodName = ItemMaster.objects.get(aster_code = product_code)
                     ProductDetail.objects.create(
                         store_id = request.session['storeid'],
-                        item_code = getName.aster_code,
-                        item_name = getName.product_name,
+                        item_code = product_code,
+                        item_name = prodName.product_name,
                         batch = batch,
                         qty = qty,
                         mrp = mrp,
@@ -83,27 +82,24 @@ def productentry(request):
         return render(request, 'login/index.html')
 
 
-def productlist(request,search):
-   try:
+def productlist(request, search):
+    try:
         result = []
         if search == '-':
             data = ItemMaster.objects.all().order_by('aster_code')[:50]
-            for i in data:
-                res = {
-                    'item_code':i.aster_code,
-                    'item_name':i.product_name
-                }
-                result.append(res)
         else:
-            data = ItemMaster.objects.filter(product_name__icontains = search).all().order_by('aster_code')[:50]
-            for i in data:
-                res = {
-                    'item_code':i.aster_code,
-                    'item_name':i.product_name
-                }
-                result.append(res)
-        return JsonResponse(result,safe = False)
-   except Exception as e:
+            search_terms = search.split()  # Split search query into words
+            query = Q()
+            for term in search_terms:
+                query &= Q(product_name__icontains=term)  # Apply AND condition for all terms
+            data = ItemMaster.objects.filter(query).order_by('aster_code')[:50]
+        for i in data:
+            result.append({
+                'item_code': i.aster_code,
+                'item_name': i.display_name
+            })
+        return JsonResponse(result, safe=False)
+    except Exception as e:
         print(e)
         return HttpResponse(json.dumps({'errorMsg': str(e)}), 500)
    
@@ -178,14 +174,11 @@ def scanbarcode(request):
     if request.method == "POST":
         try:
             barCode = request.POST.get('barcode')
-            print(barCode)
-            product = ProductBarcodeMaster.objects.filter(barcode=barCode).first()
-            print(product)
+            product = ItemMaster.objects.filter(ean_upc=barCode).first()
             if product:
-                print({'ids': product.itemnumber, 'name': product.productdescription})
                 return JsonResponse({
                     'success': True,
-                    'product': {'ids': product.itemnumber, 'name': product.productdescription}
+                    'product': {'ids': product.aster_code, 'name': product.product_name}
                 })
             else:
                 return JsonResponse({'success': False, 'error': 'Product not found.'})
@@ -307,9 +300,10 @@ def store_expiry_data_entry(request):
         print(e)
         return render(request, 'login/index.html')
     
-def getpacksize(request,productname):
+def getpacksize(request):
     try:
-        getdetails = ItemMaster.objects.filter(product_name = productname).all().order_by('sales_unit')
+        productCode = request.GET.get('value', '')
+        getdetails = ItemMaster.objects.filter(aster_code = productCode).all().order_by('sales_unit')
         packList = [i.sales_unit for i in getdetails]
         return JsonResponse({'success': True,'product': {'packSize': packList}})
     except Exception as e:
