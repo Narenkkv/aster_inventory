@@ -196,3 +196,12 @@ $(document).on("change", ".storeValueFetch", function () {
     storeHtml = '<input type="hidden" name="store_name" id="store_name" value="' + selectedValues + '">'
     $("#getstorename").empty().append(storeHtml);
 });
+document.addEventListener("DOMContentLoaded", function () {
+    const barcodeInput = document.getElementById("enterBarcode");
+    
+    barcodeInput.addEventListener("keypress", function (event) {
+        if (event.key === "Enter") {
+            event.preventDefault(); // Prevent form submission
+        }
+    });
+});

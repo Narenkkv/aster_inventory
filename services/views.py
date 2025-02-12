@@ -333,3 +333,25 @@ def storeproductlist(request,search):
    except Exception as e:
         print(e)
         return HttpResponse(json.dumps({'errorMsg': str(e)}), 500)
+   
+def barcodeEntry(request):
+    try:
+        if request.method == 'POST':
+            if 'barcodesave' in request.POST:
+                barcode = request.POST['enterBarcode']
+                productcode = request.POST['item_name']
+                productName = ItemMaster.objects.get(aster_code = productcode)
+                BarcodeUpdate.objects.create(
+                    aster_code = productcode,
+                    item_name = productName.product_name,
+                    bar_code = barcode,
+                    created_user = request.session['username'],
+                    date_of_creation = datetime.now()
+                )
+                ItemMaster.objects.filter(aster_code = productcode).update(ean_upc = barcode)
+                messages.success(request,'Barcode updated successfully')
+                return redirect('barcodeEntry')
+        return render(request,'barcodeEntry.html')
+    except Exception as e:
+        print(e)
+        return render(request, 'login/index.html')

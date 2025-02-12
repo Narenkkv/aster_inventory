@@ -1,7 +1,9 @@
 {% if messages %}
 {% for message in messages %}
 {% if message.tags %}
-<div class="error_msg">{{ message }}</div>
+<div class="alert {% if 'error' in message.tags %}error_msg{% elif 'success' in message.tags %}success_msg{% endif %}">
+    {{ message }}
+</div>
 {% endif %}
 {% endfor %}
 {% endif %}
@@ -10,7 +12,7 @@
 <script>
     $(document).ready(function() {
         // Fade out each message after 3 seconds (3000 milliseconds)
-        $('.error_msg').each(function() {
+        $('.alert').each(function() {
             $(this).delay(3000).fadeOut(1000);
         });
     });
@@ -24,6 +26,15 @@
         border: 1px solid #f5c6cb;
         margin: 10px 0; /* Add some space between messages */
         color: #721c24;
+        text-align: center;
+    }
+    .success_msg {
+        display: inline-block;
+        padding: 10px;
+        background-color: #505351;
+        border: 1px solid #c3e6cb;
+        margin: 10px 0;
+        color: #47e46c;
         text-align: center;
     }
 </style>

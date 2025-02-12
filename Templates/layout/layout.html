@@ -41,6 +41,9 @@
     {% if isdownload == 2 %}
     <a href="{% url 'store_expiry_data_entry' %}"><i class="fa-solid fa-table-cells-large"></i><span style="margin-left: 5px;"> Data Entry Form </span></a>
     <a href="{% url 'store_expiry_report_download_data' %}"><i class="fa-solid fa-download"></i><span style="margin-left: 5px;"> RTV Data </span></a>
+    {%elif isdownload == 0 %}
+    <a href="{% url 'productentry' %}"><i class="fa-solid fa-pen"></i><span style="margin-left: 5px;"> Audit Entry </span></a>
+    <a href="{% url 'barcodeEntry' %}"><i class="fa-solid fa-barcode"></i><span style="margin-left: 5px;"> Enter Barcode </span></a>
     {% endif %}
     <a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i> <span style="margin-left: 5px;"> Logout </span></a>
 </div>

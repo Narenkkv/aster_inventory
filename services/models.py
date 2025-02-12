@@ -159,3 +159,14 @@ class ProductNameList(models.Model):
     class Meta:
         managed = False
         db_table = 'product_name_list'
+
+class BarcodeUpdate(models.Model):
+    aster_code = models.CharField(max_length=50)
+    item_name = models.CharField(max_length=700)
+    bar_code = models.CharField(max_length=60, blank=True, null=True)
+    created_user = models.CharField(max_length=60)
+    date_of_creation = models.DateTimeField()
+
+    class Meta:
+        managed = False
+        db_table = 'barcode_update'
