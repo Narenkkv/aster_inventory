@@ -1,8 +1,8 @@
-$(function () {
-    let isScannerActive = false; // Flag to prevent multiple activations
+$(function () { 
+    let isScannerActive = false;
 
     function fetchProductDetails(barcode) {
-        const csrfToken = getCookie('csrftoken'); // Get CSRF token
+        const csrfToken = getCookie('csrftoken');
         const xhr = new XMLHttpRequest();
 
         xhr.open('POST', '/scanbarcode/', true);
@@ -13,14 +13,8 @@ $(function () {
                 const response = JSON.parse(xhr.responseText);
                 console.log(response);
                 if (response.success) {
-                    const productName = response.product['name'];
-                    console.log(productName);
-
-                    // Correct way to access Selectize.js instance
                     const $selectizeControl = $('.delValueFetch')[0].selectize;
-
                     if ($selectizeControl) {
-                        // Clear existing options and add the new one
                         $selectizeControl.clearOptions();
                         $selectizeControl.addOption({ value: response.product['ids'], text: response.product['name'] });
                         $selectizeControl.setValue(response.product['ids']);
@@ -39,7 +33,6 @@ $(function () {
         xhr.send(`csrfmiddlewaretoken=${csrfToken}&barcode=${barcode}`);
     }
 
-    // Function to get CSRF token
     function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
@@ -55,44 +48,60 @@ $(function () {
         return cookieValue;
     }
 
-    // Initialize ZXing BrowserMultiFormatReader
     const codeReader = new ZXing.BrowserMultiFormatReader();
 
     // Start scanner on button click
     document.getElementById('start-scanner').addEventListener('click', async function () {
-        if (isScannerActive) return; // Don't start the scanner if it's already active
-        isScannerActive = true; // Set flag to indicate scanner is active
+        if (isScannerActive) return;
+        isScannerActive = true;
 
         const readerElement = document.getElementById('reader');
-        readerElement.style.display = 'block'; // Show the reader container
+        readerElement.style.display = 'block';
 
         try {
-            // List video input devices
             const videoInputDevices = await codeReader.listVideoInputDevices();
-
-            // Select the back camera (if available)
-            let selectedDeviceId = videoInputDevices[0].deviceId; // Default to the first device
+            let selectedDeviceId = videoInputDevices[0].deviceId;
             videoInputDevices.forEach((device) => {
                 if (device.label.toLowerCase().includes('back')) {
                     selectedDeviceId = device.deviceId;
                 }
             });
 
-            // Start decoding video stream from the selected camera
             codeReader.decodeFromVideoDevice(selectedDeviceId, 'reader', (result) => {
                 if (result) {
                     console.log(`Scanned Code: ${result.getText()}`);
-                    fetchProductDetails(result.getText()); // Send barcode to server
-                    // Optionally reset scanner or stop here
-                    codeReader.reset(); // Stop scanner after successful scan
-                    readerElement.style.display = 'none'; // Hide reader container
-                    isScannerActive = false; // Reset flag
+                    fetchProductDetails(result.getText());
+                    codeReader.reset();
+                    readerElement.style.display = 'none';
+                    isScannerActive = false;
                 }
             });
         } catch (err) {
             console.error('Error initializing scanner:', err);
             alert('Unable to access camera.');
-            isScannerActive = false; // Reset flag on error
+            isScannerActive = false;
         }
+    });
+
+    // Handle Barcode Scanner Input (Physical Scanner)
+    let barcodeBuffer = '';
+    let typingTimer;
+    const barcodeInputField = document.getElementById('barcode-input');
+
+    document.addEventListener('keydown', function (event) {
+        if (event.key === 'Enter' && barcodeBuffer.length > 3) {
+            console.log(barcodeBuffer);
+            fetchProductDetails(barcodeBuffer);
+            barcodeBuffer = '';
+        } else if (event.key.length === 1) {
+            barcodeBuffer += event.key;
+            clearTimeout(typingTimer);
+            typingTimer = setTimeout(() => { barcodeBuffer = ''; }, 500); // Reset buffer after 500ms
+        }
+    });
+
+    // Autofocus input field when a scanner is used
+    barcodeInputField.addEventListener('focus', function () {
+        barcodeBuffer = '';
     });
 });

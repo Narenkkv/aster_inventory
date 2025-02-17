@@ -79,6 +79,7 @@ def productentry(request):
         return render(request, 'productEntry.html')
     except Exception as e:
         print(e)
+        messages.error(request,e)
         return render(request, 'login/index.html')
 
 
