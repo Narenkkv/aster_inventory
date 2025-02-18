@@ -4,22 +4,36 @@ $(function () {
     function fetchProductDetails(barcode) {
         const csrfToken = getCookie('csrftoken');
         const xhr = new XMLHttpRequest();
-
+    
         xhr.open('POST', '/scanbarcode/', true);
         xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
+    
         xhr.onload = function () {
             if (xhr.status === 200) {
                 const response = JSON.parse(xhr.responseText);
                 console.log(response);
+    
                 if (response.success) {
-                    const $selectizeControl = $('.delValueFetch')[0].selectize;
-                    if ($selectizeControl) {
-                        $selectizeControl.clearOptions();
-                        $selectizeControl.addOption({ value: response.product['ids'], text: response.product['name'] });
-                        $selectizeControl.setValue(response.product['ids']);
-                    } else {
-                        console.error('Selectize control not found.');
+                    const selectElement = document.querySelector('.itemValueFetch');
+                    const tomSelectInstance = selectElement.tomselect;
+                    const product = response.product;
+    
+                    if (tomSelectInstance) {
+                        tomSelectInstance.clear(); // Clear previous selection
+    
+                        // Check if the option exists in TomSelect
+                        let optionExists = Object.values(tomSelectInstance.options).some(opt => opt.title === product.name);
+    
+                        if (!optionExists) {
+                            // Add option dynamically if not found
+                            tomSelectInstance.addOption({
+                                item_code: product.ids, // Match with valueField
+                                item_name: product.name // Match with labelField
+                            });
+                        }
+    
+                        // Set the value based on item_code (id)
+                        tomSelectInstance.setValue(product.ids);
                     }
                 } else {
                     alert(response.message || 'Product not found!');
@@ -29,9 +43,10 @@ $(function () {
                 alert('An error occurred while fetching product details.');
             }
         };
-
+    
         xhr.send(`csrfmiddlewaretoken=${csrfToken}&barcode=${barcode}`);
     }
+    
 
     function getCookie(name) {
         let cookieValue = null;

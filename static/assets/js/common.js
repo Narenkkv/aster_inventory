@@ -95,29 +95,29 @@ $(document).ready(function () {
             }
         }
     });
-    $(document).on("change", ".delValueFetch", function () {
-        var selectize = $(this).selectize()[0].selectize;
-        var selectedValues = encodeURIComponent(selectize.getValue());
+    // $(document).on("change", ".delValueFetch", function () {
+    //     var selectize = $(this)[0].selectize;
+    //     var selectedValues = encodeURIComponent(selectize.getValue());
         
-        var value = [];
-        try{
-            $.ajax({
-                type: "GET",
-                url: "/getpacksize/?value=" + selectedValues ,
-                dataType: "json",
-                success: function (data) {
-                    data.product.packSize.forEach(function (size) {
-                        value += '<option value="' + size + '">' + size + "</option>";
-                    });
-                    console.log(value);
-                    $("#packsize").empty();
-                    $("#packsize").append(value);
-                }
-            })
-        }catch(i){
-            console.log(i);
-        }
-    });
+    //     var value = [];
+    //     try{
+    //         $.ajax({
+    //             type: "GET",
+    //             url: "/getpacksize/?value=" + selectedValues ,
+    //             dataType: "json",
+    //             success: function (data) {
+    //                 data.product.packSize.forEach(function (size) {
+    //                     value += '<option value="' + size + '">' + size + "</option>";
+    //                 });
+    //                 console.log(value);
+    //                 $("#packsize").empty();
+    //                 $("#packsize").append(value);
+    //             }
+    //         })
+    //     }catch(i){
+    //         console.log(i);
+    //     }
+    // });
     // for dow user need to hide the store details
     $('#storeValueFetch').selectize({
         create: true,
