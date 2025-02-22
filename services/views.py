@@ -117,7 +117,8 @@ def download_data(request):
                             f"PWD={os.environ["DB_PASSWORD"]};")
             conn = pyodbc.connect(connection_string)
             query = """
-                SELECT * FROM product_detail
+                select id,store_id,item_code,item_name+'_'+pack_size as item_name,batch,qty,mrp,user_name,date_of_created,rack_no,exp_date,pack_size
+                from product_detail
                 WHERE CAST(date_of_created AS DATE) BETWEEN ? AND ?
                 """
             filename = f'Audit_Data_{fromDate}'
