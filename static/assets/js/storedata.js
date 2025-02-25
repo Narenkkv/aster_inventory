@@ -1,51 +1,40 @@
 $(document).ready(function () {
-    $(document).on("click", ".storedataValueFetch", function () {
-        var selectize = $(this).prev('.storedataValueFetch').selectize()[0].selectize,
-            selectedValues = selectize.getValue();
-            if (selectedValues == "") {
-                filter = '-'
-                try {
-                    $.ajax({
-                        type: "GET",
-                        url: "/storeproductlist/" + filter + "/",
-                        dataType: "json",
-                        success: function (data) {
-                            for (let i = 0; i < data.length; i++) {
-                                selectize.clear();
-                                $.each(data, function (index, option) {
-                                    selectize.addOption({ value: option.item_code, text: option.item_name });
-                                });
-                                selectize.load(function (callback) {
-                                    callback(data);
-                                });
-                            }
-    
-                        }
-                    })
-                }catch (i) {
-                    console.log(i);
-                }
-                selectize.on('type', function (str) {
-                    // Retrieve the search input value on key press
-                    if (str != "") {
-                        $.ajax({
-                            type: "GET",
-                            url: "/storeproductlist/" + str + "/",
-                            dataType: "json",
-                            success: function (data) {
-                                selectize.clearOptions();
-                                for (let i = 0; i < data.length; i++) {
-                                    $.each(data, function (index, option) {
-                                        selectize.addOption({ value: option.item_code, text: option.item_name });
-                                    });
-                                    selectize.load(function (callback) {
-                                        callback(data);
-                                    });
-                                }
-                            }
-                        });
+    $(".storedataValueFetch").each(function () {
+        // Initialize TomSelect and store the instance in the element's data
+        var tomSelectInstance = new TomSelect(this, {
+            maxItems: 1,  // Allow only one selection
+            create: false, // Prevent users from entering custom values
+            plugins: ['remove_button'], // Adds a remove button
+            valueField: 'item_code',
+            labelField: 'item_name',
+            searchField: 'item_name',
+            load: function (query, callback) {
+                var url = "/storeproductlist/" + (query ? query : "-") + "/";
+                
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    dataType: "json",
+                    success: function (data) {
+                        callback(data); // Pass the data to TomSelect's callback function
+                    },
+                    error: function (xhr, status, error) {
+                        callback([]); // Return empty array in case of error
+                        console.log('Error fetching data:', error);
                     }
                 });
+            },
+            onItemAdd: function () {
+                // Disable input after selecting one item
+                this.control_input.disabled = true;
+            },
+            onItemRemove: function () {
+                // Re-enable input when the selected item is removed
+                this.control_input.disabled = false;
             }
+        });
+
+        // Manually store the TomSelect instance in the element’s data
+        $(this).data('tomSelectInstance', tomSelectInstance);
     });
 });

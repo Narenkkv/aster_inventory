@@ -235,6 +235,8 @@ def store_expiry_data_entry(request):
                     mrp = request.POST['mrp']
                     expMonth = request.POST['expMonth']
                     expYear = request.POST['expYear']
+                    print(productcode)
+                    print(batch)
                     newentry = StoreExpiryProductDetail.objects.create(
                         store_id = request.session['storeid'],
                         item_code = productcode,
@@ -249,7 +251,9 @@ def store_expiry_data_entry(request):
                     )
                     getproductdetailsid = newentry.id
                     state = StoreMaster.objects.get(d_365_store_id = request.session['storeid'])
-                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, batch_no_upper = batch, state = state.store_state)
+                    print(state.store_state)
+                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, batch_no_upper = batch, state = state.store_state)
+                    print(itemList)
                     if itemList.exists():
                         selected_vendor = None
                         details =  itemList.order_by(state.store_state.lower())
@@ -261,6 +265,7 @@ def store_expiry_data_entry(request):
                                 break 
                             else:
                                 selected_vendor = 'Others'
+                        print(selected_vendor)
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
                             item_code = productcode,

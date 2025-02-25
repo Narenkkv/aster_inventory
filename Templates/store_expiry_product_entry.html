@@ -56,16 +56,19 @@
     <script type="text/javascript" src="{% static 'assets/js/cdn/selectize.min.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/storedata.js' %}"></script>
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css">
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <!-- ZXing.js should be loaded before your custom barcode scanning script -->
 
 
-    <script>
+    <!-- <script>
         $(function() {
             $('.storedataValueFetch').selectize({
                 plugins: ["remove_button"],
                 maxItems: 1,    
             });
         });
-    </script>
+    </script> -->
 </body>
 {% endblock %}
