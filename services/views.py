@@ -305,6 +305,7 @@ def store_expiry_data_entry(request):
         return render(request, 'store_expiry_product_entry.html')
     except Exception as e:
         print(e)
+        messages.error(request,e)
         return render(request, 'login/index.html')
     
 def getpacksize(request):
