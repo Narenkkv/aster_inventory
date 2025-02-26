@@ -254,6 +254,9 @@ def store_expiry_data_entry(request):
                     print(state.store_state)
                     itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, batch_no_upper = batch, state = state.store_state)
                     print(itemList)
+                    date_string = expMonth+'-'+expYear
+                    date_object = datetime.strptime(date_string, "%m-%Y")
+                    formatted_date = date_object.strftime("%Y-%m-%d")
                     if itemList.exists():
                         selected_vendor = None
                         details =  itemList.order_by(state.store_state.lower())
@@ -271,7 +274,7 @@ def store_expiry_data_entry(request):
                             item_code = productcode,
                             item_name = productname.product_name,
                             batch_no = batch,
-                            date_of_expiry = item.batch_expiry_date,
+                            date_of_expiry = formatted_date,
                             vendor_name = selected_vendor,
                             accepted_qty = item.qty_sold,
                             created_by = request.session['username'],
@@ -284,9 +287,6 @@ def store_expiry_data_entry(request):
                             itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
                                                         batch_no_upper = batch, state = state.store_state, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     else:
-                        date_string = expMonth+'-'+expYear
-                        date_object = datetime.strptime(date_string, "%m-%Y")
-                        formatted_date = date_object.strftime("%Y-%m-%d")
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
                             item_code = productcode,
