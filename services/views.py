@@ -252,12 +252,12 @@ def store_expiry_data_entry(request):
                     getproductdetailsid = newentry.id
                     state = StoreMaster.objects.get(d_365_store_id = request.session['storeid'])
                     print(state.store_state)
-                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, batch_no_upper = batch, state = state.store_state)
+                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, batch_no_upper = batch)
                     print(itemList)
                     date_string = expMonth+'-'+expYear
                     date_object = datetime.strptime(date_string, "%m-%Y")
                     formatted_date = date_object.strftime("%Y-%m-%d")
-                    if itemList.exists():
+                    if itemList.filter(state = state.store_state).exists():
                         selected_vendor = None
                         details =  itemList.order_by(state.store_state.lower())
                         state_column_prefix = f"{state.store_state.lower()}"
@@ -284,8 +284,37 @@ def store_expiry_data_entry(request):
                             productdetail_id = getproductdetailsid
                         )
                         if selected_vendor != 'Others':
-                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
-                                                        batch_no_upper = batch, state = state.store_state, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, 
+                                                        batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
+                    elif itemList.exists():
+                        selected_vendor = None
+                        details =  itemList.order_by(state.store_state.lower())
+                        state_column_prefix = f"{state.store_state.lower()}"
+                        print(state_column_prefix)
+                        for item in details:
+                            if float(item.qty_sold) >= float(qty):
+                                selected_vendor = item.entity_name
+                                break 
+                            else:
+                                selected_vendor = 'Others'
+                        print(selected_vendor)
+                        SupplierReturnItem.objects.create(
+                            store_id = request.session['storeid'],
+                            item_code = productcode,
+                            item_name = productname.product_name,
+                            batch_no = batch,
+                            date_of_expiry = formatted_date,
+                            vendor_name = selected_vendor,
+                            accepted_qty = item.qty_sold,
+                            created_by = request.session['username'],
+                            date_of_creation = datetime.now(),
+                            return_qty = qty,
+                            remaining_qty = (float(item.qty_sold) - float(qty)),
+                            productdetail_id = getproductdetailsid
+                        )
+                        if selected_vendor != 'Others':
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, 
+                                                        batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     else:
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
