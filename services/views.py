@@ -144,7 +144,7 @@ def storelist(request,search):
             for i in data:
                 res={
                     'store_code':i.d_365_store_id,
-                    'store_name':i.d_365_store_id+'_'+i.short_name
+                    'store_name':i.d_365_store_id+'_'+i.store_name_as_per_d_365
                 }
                 result.append(res)
         else:   
