@@ -252,7 +252,7 @@ def store_expiry_data_entry(request):
                     getproductdetailsid = newentry.id
                     state = StoreMaster.objects.get(d_365_store_id = request.session['storeid'])
                     print(state.store_state)
-                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, batch_no_upper = batch)
+                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, batch_no_upper = batch)
                     print(itemList)
                     date_string = expMonth+'-'+expYear
                     date_object = datetime.strptime(date_string, "%m-%Y")
@@ -284,7 +284,7 @@ def store_expiry_data_entry(request):
                             productdetail_id = getproductdetailsid
                         )
                         if selected_vendor != 'Others':
-                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, 
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
                                                         batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     elif itemList.exists():
                         selected_vendor = None
@@ -313,7 +313,7 @@ def store_expiry_data_entry(request):
                             productdetail_id = getproductdetailsid
                         )
                         if selected_vendor != 'Others':
-                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_number, 
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
                                                         batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     else:
                         SupplierReturnItem.objects.create(
