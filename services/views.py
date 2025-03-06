@@ -13,6 +13,7 @@ import os
 import sqlite3
 import json
 import io
+import pytz
 # Create your views here.
 
 
@@ -40,8 +41,10 @@ def index(request):
                     username =  Usermaster.objects.filter(name=username).get()
                     if username.isdownload == 1:
                         return redirect('download_data')
-                    if username.isdownload == 2:
+                    elif username.isdownload == 2:
                         return redirect('store_expiry_data_entry')
+                    elif username.isdownload == 3:
+                        return redirect('expirydownload_data')
                     else:
                         return redirect('productentry')
         return render(request, 'login/index.html')
@@ -104,37 +107,91 @@ def productlist(request, search):
         print(e)
         return HttpResponse(json.dumps({'errorMsg': str(e)}), 500)
    
-
 def download_data(request):
     try:
         if request.method == "POST" and 'downloadrecord' in request.POST:
             fromDate = request.POST['fromdate']
             toDate = request.POST['todate']
+            checkboxStatus = request.POST.get('allstore')
             connection_string = ('DRIVER={ODBC Driver 17 for SQL Server};'
                             f"SERVER={os.environ["HOST"]};"
                             f"DATABASE={os.environ["DB_NAME"]};"
                             f"UID={os.environ["DB_USER"]};"
                             f"PWD={os.environ["DB_PASSWORD"]};")
             conn = pyodbc.connect(connection_string)
-            query = """
-                select id,store_id,item_code,item_name+'_'+pack_size as item_name,batch,qty,mrp,user_name,date_of_created,rack_no,exp_date,pack_size
-                from product_detail
+            if checkboxStatus is None:
+                storeCodeList  = request.POST.getlist('storeName')
+                storeCode = storeCodeList[0] if storeCodeList else None
+                query = """
+                SELECT id, store_id, item_code, 
+                       item_name + '_' + pack_size AS item_name, 
+                       CAST(batch AS NVARCHAR) AS batch, 
+                       qty, mrp, user_name, 
+                       date_of_created, rack_no, 
+                        '01'+'-'+exp_date as exp_date, pack_size
+                FROM product_detail
+                WHERE CAST(date_of_created AS DATE) BETWEEN ? AND ? AND store_id = ?
+                """
+                data = pd.read_sql_query(query, conn, params=(fromDate, toDate,storeCode))
+            else:
+                query = """
+                SELECT id, store_id, item_code, 
+                       item_name + '_' + pack_size AS item_name, 
+                       CAST(batch AS NVARCHAR) AS batch, 
+                       qty, mrp, user_name, 
+                       date_of_created, rack_no, 
+                        '01'+'-'+exp_date as exp_date, pack_size
+                FROM product_detail
                 WHERE CAST(date_of_created AS DATE) BETWEEN ? AND ?
                 """
-            filename = f'Audit_Data_{fromDate}'
-            data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
+                data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
+
+            # Convert batch column to string explicitly
+            data['batch'] = data['batch'].astype(str)
+            data['exp_date'] = data['exp_date'].astype(str)
+
+            # Convert date_of_created from UTC to IST (UTC+5:30)
+            utc_zone = pytz.utc
+            ist_zone = pytz.timezone('Asia/Kolkata')
+
+            data['date_of_created'] = pd.to_datetime(data['date_of_created'], utc=True)
+            data['date_of_created'] = data['date_of_created'].dt.tz_convert(ist_zone)
+            data['date_of_created'] = data['date_of_created'].dt.strftime('%Y-%m-%d %H:%M:%S')  # Format as string
+
+            # Prepare Excel file
             output = io.BytesIO()
             with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
                 data.to_excel(writer, sheet_name='Audit_Data', index=False)
+
+                # Get the workbook and worksheet
+                workbook = writer.book
+                worksheet = writer.sheets['Audit_Data']
+
+                # Define text format for batch column
+                text_format = workbook.add_format({'num_format': '@'})  # '@' forces text format
+                batch_column_index = data.columns.get_loc("batch")  # Get the index of batch column
+
+                # Apply format to the entire column
+                worksheet.set_column(batch_column_index, batch_column_index, None, text_format)
+
+                # for expiry date
+                text_format = workbook.add_format({'num_format': '@'})  # '@' forces text format
+                expiry_column_index = data.columns.get_loc("exp_date")  # Get the index of batch column
+
+                # Apply format to the entire column
+                worksheet.set_column(expiry_column_index, expiry_column_index, None, text_format)
+
             output.seek(0)
             response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
-            response['Content-Disposition'] = f'attachment; filename={smart_str("Audit_Data_" + fromDate + ".xlsx")}'
+            response['Content-Disposition'] = f'attachment; filename={smart_str("Audit_Data_" + fromDate + '_'+ toDate + ".xlsx")}'
+
             conn.close()
             return response
         return render(request, 'download_data.html')
     except Exception as e:
         print(e)
         return render(request, 'login/index.html')
+
     
 def storelist(request,search):
     try:
@@ -389,6 +446,88 @@ def barcodeEntry(request):
                 messages.success(request,'Barcode updated successfully')
                 return redirect('barcodeEntry')
         return render(request,'barcodeEntry.html')
+    except Exception as e:
+        print(e)
+        return render(request, 'login/index.html')
+    
+def expirydownload_data(request):
+    try:
+        if request.method == "POST" and 'downloadrecord' in request.POST:
+            fromDate = request.POST['fromdate']
+            toDate = request.POST['todate']
+            checkboxStatus = request.POST.get('allstore')
+            connection_string = ('DRIVER={ODBC Driver 17 for SQL Server};'
+                            f"SERVER={os.environ["HOST"]};"
+                            f"DATABASE={os.environ["DB_NAME"]};"
+                            f"UID={os.environ["DB_USER"]};"
+                            f"PWD={os.environ["DB_PASSWORD"]};")
+            conn = pyodbc.connect(connection_string)
+            if checkboxStatus is None:
+                storeCodeList  = request.POST.getlist('region')
+                regionCode = storeCodeList[0] if storeCodeList else None
+                print(regionCode)
+                storeId = None
+                if regionCode == '0':
+                    storeId = '29%'
+                elif regionCode == '1':
+                    storeId = '32%'
+                elif regionCode == '2':
+                    storeId = '36%'
+                print(storeId)
+                query = """
+                select store_id,item_code,item_name,batch_no,date_of_expiry,vendor_name,return_qty,created_by,date_of_creation 
+                from supplier_return_item where CAST(date_of_creation AS DATE) BETWEEN ? AND ? and store_id like ? 
+                """
+                data = pd.read_sql_query(query, conn, params=(fromDate, toDate,storeId))
+            else:
+                query = """
+                select store_id,item_code,item_name,batch_no,date_of_expiry,vendor_name,return_qty,created_by,date_of_creation 
+                from supplier_return_item where CAST(date_of_creation AS DATE) BETWEEN ? AND ? 
+                """
+                data = pd.read_sql_query(query, conn, params=(fromDate, toDate))
+
+            # Convert batch column to string explicitly
+            data['batch_no'] = data['batch_no'].astype(str)
+            data['date_of_expiry'] = data['date_of_expiry'].astype(str)
+
+            # Convert date_of_created from UTC to IST (UTC+5:30)
+            utc_zone = pytz.utc
+            ist_zone = pytz.timezone('Asia/Kolkata')
+
+            data['date_of_creation'] = pd.to_datetime(data['date_of_creation'], utc=True)
+            data['date_of_creation'] = data['date_of_creation'].dt.tz_convert(ist_zone)
+            data['date_of_creation'] = data['date_of_creation'].dt.strftime('%Y-%m-%d %H:%M:%S')  # Format as string
+
+            # Prepare Excel file
+            output = io.BytesIO()
+            with pd.ExcelWriter(output, engine='xlsxwriter') as writer:
+                data.to_excel(writer, sheet_name='Expiry_Data', index=False)
+
+                # Get the workbook and worksheet
+                workbook = writer.book
+                worksheet = writer.sheets['Expiry_Data']
+
+                # Define text format for batch column
+                text_format = workbook.add_format({'num_format': '@'})  # '@' forces text format
+                batch_column_index = data.columns.get_loc("batch_no")  # Get the index of batch column
+
+                # Apply format to the entire column
+                worksheet.set_column(batch_column_index, batch_column_index, None, text_format)
+
+                # for expiry date
+                text_format = workbook.add_format({'num_format': '@'})  # '@' forces text format
+                expiry_column_index = data.columns.get_loc("date_of_expiry")  # Get the index of batch column
+
+                # Apply format to the entire column
+                worksheet.set_column(expiry_column_index, expiry_column_index, None, text_format)
+
+            output.seek(0)
+            response = HttpResponse(output, content_type='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')
+            response['Content-Disposition'] = f'attachment; filename={smart_str("Expiry_Data" + fromDate + '_'+ toDate + ".xlsx")}'
+
+            conn.close()
+            return response
+        return render(request, 'expiry_download_data.html')
     except Exception as e:
         print(e)
         return render(request, 'login/index.html')

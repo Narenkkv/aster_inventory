@@ -22,6 +22,7 @@ urlpatterns = [
 
     path('barcodeentry/',views.barcodeEntry,name='barcodeEntry'),
 
+    path('expirydownloaddata/',views.expirydownload_data,name='expirydownload_data'),
 
 
 ]

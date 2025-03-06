@@ -8,9 +8,11 @@
             {% csrf_token %}
             <div class="form-row">
                 <div class="form-group col-md-8 selectDrop">
-                    <div class="downloadStoreName" id="downloadStoreName"></div>
                     <label class="form-control-label" for="storeValueFetch">Store Name:</label>
-                    <select id="storeValueFetch" data-search="true" data-value="Custom" class="fw-light storeValueFetch" name="storeName">
+                    <select id="storeFetch" class="form-select fw-light storeFetch" name="region">
+                        <option value="0">Karnataka</option>
+                        <option value="1">Kerala</option>
+                        <option value="2">Telangana</option>
                     </select>
                 </div>
                 <div class="form-group col-md-4">
@@ -36,13 +38,5 @@
     <script type="text/javascript" src="{% static 'assets/js/cdn/selectize.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'assets/js/common.js' %}"></script>
     <script type="text/javascript" src="{% static 'assets/js/download_fun.js' %}"></script>
-	<script>
-        $(function() {
-            $('.storeValueFetch').selectize({
-              plugins: ["remove_button"],
-			  maxItems: 1,
-            });
-        });
-        </script>
 </body>
 {% endblock %}
