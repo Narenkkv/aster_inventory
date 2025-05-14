@@ -13,13 +13,11 @@
               <tr>
                 <th>Store Id</th>
                 <th>Store Name</th>
+                <th>Customer Name</th>
                 <th>Bill No</th>
                 <th>Bill Date</th>
-                <th>Customer Name</th>
                 <th>Mobile No</th>
-                <th>SalesMan</th>
-                <th>Transaction Type</th>
-                <th>Home Delivery</th>
+                <th>Product Name</th>
                 <th>Qty</th>
                 <th>Total Amount</th>
               </tr>
@@ -29,13 +27,11 @@
               <tr>
                 <td>{{ i.storeid }}</td>
                 <td>{{ i.storename }}</td>
+                <td>{{ i.custname }}</td>
                 <td>{{ i.billno }}</td>
                 <td>{{ i.billdate }}</td>
-                <td>{{ i.custname }}</td>
                 <td>{{ i.mobilenum }}</td>
-                <td>{{ i.salesman }}</td>
-                <td>{{ i.transactiontype }}</td>
-                <td>{{ i.homedelivery }}</td>
+                <td>{{ i.itemdescription }}</td>
                 <td>{{ i.qty }}</td>
                 <td>{{ i.totalvalue }}</td>
               </tr>

@@ -536,7 +536,18 @@ def expirydownload_data(request):
     
 def storeSalesData(request):
     try:
-        saleData = StoreSalesData.objects.filter(storeid = request.session['storeid']).all() 
+        saleData = StoreSalesData.objects.raw("""SELECT 
+                                                    a.storeid as storeid,
+                                                    a.storename as storename,
+                                                    a.custname as custname,
+                                                    a.billno as BillNo,
+                                                    a.billdate as billdate,
+                                                    a.mobilenum as mobilenum,
+                                                    b.itemdescription as itemdescription,
+                                                    b.Quantity as qty,
+                                                    a.totalvalue as totalvalue
+                                                FROM store_sales_data a LEFT JOIN store_detail_sales_data b
+                                                ON a.BillNo = b.BillNo where a.Storeid = %s """,[request.session['storeid']])
         return render(request,'store_sales_data.html',{'saleData':saleData})
     except Exception as e:
         print(e)

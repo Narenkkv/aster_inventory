@@ -201,3 +201,48 @@ class StoreSalesData(models.Model):
     class Meta:
         managed = False
         db_table = 'store_sales_data'
+
+class StoreDetailSalesData(models.Model):
+    storeid = models.TextField(db_column='Storeid', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    storename = models.TextField(db_column='StoreName', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    billdate = models.TextField(db_column='BillDate', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    billtime = models.TextField(db_column='BillTime', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    transtype = models.TextField(db_column='TransType', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    billno = models.TextField(db_column='BillNo', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    salesman = models.TextField(db_column='Salesman', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    offerid = models.TextField(db_column='OfferId', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    offerdescription = models.TextField(db_column='OfferDescription', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    originalbillno = models.TextField(db_column='OriginalBillNo', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    stylecode1 = models.TextField(db_column='StyleCode1', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    itemdescription = models.TextField(db_column='ItemDescription', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    itemreference = models.TextField(db_column='ItemReference', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    drugtype = models.TextField(db_column='DrugType', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    manufacturer = models.TextField(db_column='MANUFACTURER', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    category = models.TextField(db_column='Category', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    subcategory = models.TextField(db_column='SubCategory', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    itemgroup = models.TextField(db_column='ItemGroup', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    hsncode = models.TextField(db_column='HSNCode', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    chronicname = models.TextField(db_column='ChronicName', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    isgenericname = models.TextField(db_column='IsGenericName', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    batch = models.TextField(db_column='Batch', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase. 
+    expirydate = models.TextField(db_column='ExpiryDate', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    mrp = models.TextField(db_column='MRP', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.     
+    quantity = models.TextField(db_column='Quantity', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    mrpvalue = models.TextField(db_column='MRPValue', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    value = models.TextField(db_column='Value', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase. 
+    gsv = models.TextField(db_column='GSV', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.     
+    taxpercent = models.TextField(db_column='TaxPercent', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    taxexemted = models.TextField(db_column='TaxExemted', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    sgstvalue = models.TextField(db_column='SGSTValue', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    cgstvalue = models.TextField(db_column='CGSTValue', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    igstvalue = models.TextField(db_column='IGSTValue', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    cessvalue = models.TextField(db_column='CESSValue', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    itemdiscount = models.TextField(db_column='ItemDiscount', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    billdiscount = models.TextField(db_column='BillDiscount', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    totaldiscount = models.TextField(db_column='TotalDiscount', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+    cost = models.TextField(db_column='Cost', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.   
+    costwithtax = models.TextField(db_column='CostWithTax', db_collation='SQL_Latin1_General_CP1_CI_AS', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'store_detail_sales_data'
