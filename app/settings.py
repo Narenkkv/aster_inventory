@@ -83,6 +83,21 @@ WSGI_APPLICATION = 'app.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'mssql',
+#         'NAME':  os.environ["DB_NAME"],
+#         'USER': os.environ["DB_USER"],
+#         'PASSWORD': os.environ["DB_PASSWORD"],
+#         'HOST': os.environ["HOST"],
+#         'PORT': '1433',
+
+#         'OPTIONS': {
+#             'driver': 'ODBC Driver 17 for SQL Server',
+#             'extra_params': 'Authentication=ActiveDirectoryServicePrincipal'  
+#         },
+#     },
+# }
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
@@ -90,14 +105,14 @@ DATABASES = {
         'USER': os.environ["DB_USER"],
         'PASSWORD': os.environ["DB_PASSWORD"],
         'HOST': os.environ["HOST"],
-        'PORT': '1433',
+        'PORT': '',
 
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
+            # 'extra_params': 'Authentication=ActiveDirectoryServicePrincipal'
         },
     },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.1/ref/settings/#auth-password-validators

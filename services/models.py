@@ -4,21 +4,13 @@ from datetime import datetime
 # Create your models here.
 
 class ProductMaster(models.Model):
-    item_number = models.CharField(db_column='Item_number', primary_key=True, max_length=10, blank=True, null=False)  # Field name made lowercase.
-    product_name = models.CharField(db_column='Product_name', max_length=500)  # Field name made lowercase.
-    search_name = models.CharField(db_column='Search_name', max_length=600, blank=True, null=True,db_index=True)  # Field name made lowercase.
-    item_reference = models.CharField(db_column='Item_reference', max_length=400, blank=True, null=True)  # Field name made lowercase.
-    manufacturer = models.CharField(db_column='Manufacturer', max_length=300, blank=True, null=True)  # Field name made lowercase.
-    unit = models.CharField(db_column='Unit', max_length=30, blank=True, null=True)  # Field name made lowercase.
-    item_group = models.CharField(db_column='Item_group', max_length=100, blank=True, null=True)  # Field name made lowercase.
-    is_purchasse_b = models.CharField(db_column='IS_Purchasse_B', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    one_mdm_code = models.CharField(db_column='One_MDM_Code', max_length=400, blank=True, null=True)  # Field name made lowercase.
-    is_sale_blocked = models.CharField(db_column='Is_Sale_Blocked', max_length=10, blank=True, null=True)  # Field name made lowercase.
-    ctg8 = models.CharField(db_column='CTG8', max_length=50, blank=True, null=True)  # Field name made lowercase.
-    ka_mdm = models.CharField(db_column='KA_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
-    kl_mdm = models.CharField(db_column='KL_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
-    tl_mdm = models.CharField(db_column='TL_MDM', max_length=400, blank=True, null=True)  # Field name made lowercase.
-    pack_size = models.CharField(max_length=10, blank=True, null=True)
+    productcode = models.CharField(db_column='ProductCode', primary_key=True, max_length=20, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.
+    productname = models.TextField(db_column='ProductName', db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.
+    productfullname = models.TextField(db_column='ProductFullName', db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.    
+    purchaseunit = models.CharField(db_column='PurchaseUnit', max_length=10, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.
+    purchasetax = models.CharField(db_column='PurchaseTax', max_length=50, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.
+    salesunit = models.CharField(db_column='SalesUnit', max_length=10, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase. 
+    salestax = models.CharField(db_column='SalesTax', max_length=50, db_collation='SQL_Latin1_General_CP1_CI_AS')  # Field name made lowercase.   
 
     class Meta:
         managed = False
@@ -170,3 +162,42 @@ class BarcodeUpdate(models.Model):
     class Meta:
         managed = False
         db_table = 'barcode_update'
+
+class StoreSalesData(models.Model):
+    storeid = models.TextField(db_column='Storeid', blank=True, null=True)  # Field name made lowercase.
+    storename = models.TextField(db_column='StoreName', blank=True, null=True)  # Field name made lowercase.
+    billno = models.CharField(db_column='BillNo', primary_key=True, max_length=16)  # Field name made lowercase.
+    billdate = models.TextField(db_column='BillDate', blank=True, null=True)  # Field name made lowercase.
+    billtime = models.TextField(db_column='BillTime', blank=True, null=True)  # Field name made lowercase.
+    custname = models.TextField(db_column='CustName', blank=True, null=True)  # Field name made lowercase.
+    mobilenum = models.CharField(db_column='MobileNum', blank=True, null=True,max_length=20)  # Field name made lowercase.
+    affname = models.TextField(db_column='AffName', blank=True, null=True)  # Field name made lowercase.
+    address = models.TextField(db_column='Address', blank=True, null=True)  # Field name made lowercase.
+    salesman = models.TextField(db_column='Salesman', blank=True, null=True)  # Field name made lowercase.
+    transactiontype = models.TextField(db_column='TransactionType', blank=True, null=True)  # Field name made lowercase.
+    doctor = models.TextField(db_column='Doctor', blank=True, null=True)  # Field name made lowercase.
+    homedelivery = models.TextField(db_column='HomeDelivery', blank=True, null=True)  # Field name made lowercase.
+    deliverdby = models.TextField(db_column='DeliverdBy', blank=True, null=True)  # Field name made lowercase.
+    qty = models.TextField(db_column='Qty', blank=True, null=True)  # Field name made lowercase.
+    value = models.TextField(db_column='Value', blank=True, null=True)  # Field name made lowercase.
+    gsv = models.TextField(db_column='GSV', blank=True, null=True)  # Field name made lowercase.
+    itemdisc = models.TextField(db_column='ItemDisc', blank=True, null=True)  # Field name made lowercase.
+    billdisc = models.TextField(db_column='BillDisc', blank=True, null=True)  # Field name made lowercase.
+    totaldisccount = models.TextField(db_column='TotalDisccount', blank=True, null=True)  # Field name made lowercase.
+    slab = models.TextField(db_column='Slab', blank=True, null=True)  # Field name made lowercase.
+    basketsize = models.TextField(db_column='BasketSize', blank=True, null=True)  # Field name made lowercase.
+    marginwotax = models.TextField(db_column='MarginWOtax', blank=True, null=True)  # Field name made lowercase.
+    marginwtax = models.TextField(db_column='MarginWtax', blank=True, null=True)  # Field name made lowercase.
+    cash = models.TextField(db_column='Cash', blank=True, null=True)  # Field name made lowercase.
+    paytm = models.TextField(db_column='Paytm', blank=True, null=True)  # Field name made lowercase.
+    paytmrecon = models.TextField(db_column='PaytmRecon', blank=True, null=True)  # Field name made lowercase.
+    ezetap_card = models.TextField(db_column='Ezetap_Card', blank=True, null=True)  # Field name made lowercase.
+    ezetap_cardrecon = models.TextField(db_column='Ezetap_CardRecon', blank=True, null=True)  # Field name made lowercase.
+    ezetap_upi = models.TextField(db_column='Ezetap_UPI', blank=True, null=True)  # Field name made lowercase.
+    ezetap_upirecon = models.TextField(db_column='Ezetap_UPIRecon', blank=True, null=True)  # Field name made lowercase.
+    creditnote = models.TextField(db_column='CreditNote', blank=True, null=True)  # Field name made lowercase.
+    totalvalue = models.TextField(db_column='TotalValue', blank=True, null=True)  # Field name made lowercase.
+
+    class Meta:
+        managed = False
+        db_table = 'store_sales_data'

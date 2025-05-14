@@ -286,7 +286,7 @@ def store_expiry_data_entry(request):
             if 'expiryrecordsave' in request.POST:
                 with transaction.atomic():
                     productcode = request.POST['item_name']
-                    productname = ProductMaster.objects.filter(item_number = productcode).get()
+                    productname = ProductMaster.objects.filter(productcode = productcode).get()
                     batch = request.POST['batch'].upper()
                     qty = request.POST['qty']
                     mrp = request.POST['mrp']
@@ -297,7 +297,7 @@ def store_expiry_data_entry(request):
                     newentry = StoreExpiryProductDetail.objects.create(
                         store_id = request.session['storeid'],
                         item_code = productcode,
-                        item_name = productname.product_name,
+                        item_name = productname.productname,
                         batch = batch,
                         qty = qty,
                         mrp = mrp,
@@ -309,27 +309,29 @@ def store_expiry_data_entry(request):
                     getproductdetailsid = newentry.id
                     state = StoreMaster.objects.get(d_365_store_id = request.session['storeid'])
                     print(state.store_state)
-                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, batch_no_upper = batch)
+                    itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(sku_code = productname.productcode, batch_no_upper = batch)
                     print(itemList)
                     date_string = expMonth+'-'+expYear
                     date_object = datetime.strptime(date_string, "%m-%Y")
                     formatted_date = date_object.strftime("%Y-%m-%d")
                     if itemList.filter(state = state.store_state).exists():
+                        print('inside state')
                         selected_vendor = None
                         details =  itemList.order_by(state.store_state.lower())
                         state_column_prefix = f"{state.store_state.lower()}"
                         print(state_column_prefix)
                         for item in details:
-                            if float(item.qty_sold) >= float(qty):
-                                selected_vendor = item.entity_name
-                                break 
-                            else:
-                                selected_vendor = 'Others'
+                            print(item.state)
+                            # if float(item.qty_sold) >= float(qty):
+                            selected_vendor = item.entity_name
+                            break 
+                            # else:
+                            #     selected_vendor = 'Others'
                         print(selected_vendor)
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
                             item_code = productcode,
-                            item_name = productname.product_name,
+                            item_name = productname.productname,
                             batch_no = batch,
                             date_of_expiry = formatted_date,
                             vendor_name = selected_vendor,
@@ -341,7 +343,7 @@ def store_expiry_data_entry(request):
                             productdetail_id = getproductdetailsid
                         )
                         if selected_vendor != 'Others':
-                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(sku_code = productname.productcode, 
                                                         batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     elif itemList.exists():
                         selected_vendor = None
@@ -349,16 +351,16 @@ def store_expiry_data_entry(request):
                         state_column_prefix = f"{state.store_state.lower()}"
                         print(state_column_prefix)
                         for item in details:
-                            if float(item.qty_sold) >= float(qty):
-                                selected_vendor = item.entity_name
-                                break 
-                            else:
-                                selected_vendor = 'Others'
+                            # if float(item.qty_sold) >= float(qty):
+                            selected_vendor = item.entity_name
+                            break 
+                            # else:
+                            #     selected_vendor = 'Others'
                         print(selected_vendor)
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
                             item_code = productcode,
-                            item_name = productname.product_name,
+                            item_name = productname.productname,
                             batch_no = batch,
                             date_of_expiry = formatted_date,
                             vendor_name = selected_vendor,
@@ -370,13 +372,13 @@ def store_expiry_data_entry(request):
                             productdetail_id = getproductdetailsid
                         )
                         if selected_vendor != 'Others':
-                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(mdm = productname.item_reference, 
+                            itemList = EnteroItemLists.objects.annotate(batch_no_upper = Upper('batch_no')).filter(sku_code = productname.productcode, 
                                                         batch_no_upper = batch, entity_name = selected_vendor).update(qty_sold = (float(item.qty_sold) - float(qty)))
                     else:
                         SupplierReturnItem.objects.create(
                             store_id = request.session['storeid'],
                             item_code = productcode,
-                            item_name = productname.product_name,
+                            item_name = productname.productname,
                             batch_no = batch,
                             date_of_expiry = formatted_date,
                             vendor_name = 'Others',
@@ -408,19 +410,19 @@ def storeproductlist(request,search):
    try:
         result = []
         if search == '-':
-            data = ProductMaster.objects.all().order_by('product_name')[:50]
+            data = ProductMaster.objects.all().order_by('productname')[:50]
             for i in data:
                 res = {
-                    'item_code':i.item_number,
-                    'item_name':i.product_name
+                    'item_code':i.productcode,
+                    'item_name':i.productname
                 }
                 result.append(res)
         else:
-            data = ProductMaster.objects.filter(product_name__icontains = search).all().order_by('product_name')[:50]
+            data = ProductMaster.objects.filter(productname__icontains = search).all().order_by('productname')[:50]
             for i in data:
                 res = {
-                    'item_code':i.item_number,
-                    'item_name':i.product_name
+                    'item_code':i.productcode,
+                    'item_name':i.productname
                 }
                 result.append(res)
         return JsonResponse(result,safe = False)
@@ -530,4 +532,13 @@ def expirydownload_data(request):
         return render(request, 'expiry_download_data.html')
     except Exception as e:
         print(e)
+        return render(request, 'login/index.html')
+    
+def storeSalesData(request):
+    try:
+        saleData = StoreSalesData.objects.filter(storeid = request.session['storeid']).all() 
+        return render(request,'store_sales_data.html',{'saleData':saleData})
+    except Exception as e:
+        print(e)
+        messages.error(request,e)
         return render(request, 'login/index.html')

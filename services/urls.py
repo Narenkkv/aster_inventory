@@ -24,5 +24,6 @@ urlpatterns = [
 
     path('expirydownloaddata/',views.expirydownload_data,name='expirydownload_data'),
 
+    path('storeSalesData/',views.storeSalesData,name='storeSalesData')
 
 ]

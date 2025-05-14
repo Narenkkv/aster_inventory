@@ -1,9 +1,9 @@
 /* Sidebar styles */
 .sidebar {
     width: 170px; /* Fixed width for sidebar */
-    height: 100vh; /* Full height of viewport */
+    height: 100%; /* Full height of viewport */
     position: fixed; /* Fix it to the side */
-    top: 56px; /* Offset for the navbar height */
+    top: 0; /* Offset for the navbar height */
     left: 0; /* Always show sidebar */
     background-color: #343a40; /* Sidebar color */
     padding-top: 1rem;
@@ -28,10 +28,14 @@
     margin-right: 30px !important;
     margin-top: 30px !important;
 }
+.store_sale_data{
+    padding-left: 210px !important;
+    padding-top: 20px !important;
+}
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .sidebar {
-        width: 50px; /* Narrow sidebar for mobile */
+        width: 60px; /* Narrow sidebar for mobile */
     }
 
     .sidebar a {
@@ -49,12 +53,16 @@
     }
 
     .main-content {
-        margin-left: 50px; /* Adjust margin for the narrow sidebar */
-        padding: 10px; /* Adjust padding for mobile */
+        margin-left: 50px !important; /* Adjust margin for the narrow sidebar */
+        padding: 10px !important; /* Adjust padding for mobile */
     }
     .allstore{
         margin-left: 20px !important;
         margin-top: 6px !important;
+    }
+    .store_sale_data{
+        padding-left: 0 !important;
+        padding-top: 0 !important;
     }
 }
 
